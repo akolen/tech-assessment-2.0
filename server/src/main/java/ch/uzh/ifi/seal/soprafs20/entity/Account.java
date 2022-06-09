@@ -29,10 +29,6 @@ public class Account implements Serializable{
     @Column(nullable = false)
     private Float Balance;
 
-    //Date when account balance was last updated
-    @Column(nullable = false)
-    private String Date;
-
 
     //getters and setters for account variables
     public String getAccountId(){return AccountId;}
@@ -53,8 +49,18 @@ public class Account implements Serializable{
     public Float getBalance(){return Balance;}
     public void setBalance(Float Balance){this.Balance = Balance;}
 
-    public String getDate(){return Date;}
-    public void setDate(String Date){this.Date = Date;}
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountId="+ AccountId +
+                ", bankName=" + '\''+ BankName + '\'' +
+                ", currency=" + '\''+ Currency + '\'' +
+                ", AccountType=" + '\''+ AccountType + '\'' +
+                ", AccountSubtype=" + '\''+ AccountSubType + '\'' +
+                ", Balance=" + Balance +
+                '}';
+    }
 
 
 }

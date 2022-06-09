@@ -169,29 +169,100 @@ public class AccountService {
         }
     }
 
-    public JSONArray getAccounts(String APIaccessToken) throws IOException {
+    public List<Account> getAccounts(String APIaccessToken) throws IOException {
+        System.out.println("here");
         URL url = new URL("https://ob.sandbox.natwest.com/open-banking/v3.1/aisp/accounts");
         HttpURLConnection http = (HttpURLConnection)url.openConnection();
         http.setRequestProperty("Authorization", String.format("Bearer %s", APIaccessToken));
 
         System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
         //read the response from InputStream
+
         try(BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream(), "utf-8"))){
             StringBuilder response = new StringBuilder();
             String responseLine = null;
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
+
+            System.out.println("accounts --> " + response.toString());
             http.disconnect();
+
             String JSONString = response.toString();
             JSONObject obj = new JSONObject(JSONString);
-            JSONObject accountsList = obj.getJSONObject("Data");
-
-            System.out.println(accountsList.getJSONArray("Account").toString());
+            JSONArray accountsList = obj.getJSONObject("Data").getJSONArray("Account");
 
 
-            return accountsList.getJSONArray("Account");
+            //save each account in accountRepository
+            for(int num = 0; num < accountsList.length(); num++){
+                JSONObject account = accountsList.getJSONObject(num);
+                Account newAccount = new Account();
+
+                String accountId = account.getString("AccountId");
+                newAccount.setAccountId(accountId);
+                String currency = account.getString("Currency");
+                newAccount.setCurrency(currency);
+                String accountType = account.getString("AccountType");
+                newAccount.setAccountType(accountType);
+                String accountSubType = account.getString("AccountSubType");
+                newAccount.setAccountSubType(accountSubType);
+                Float balance = this.getBalanceForAccount(accountId,APIaccessToken);
+                newAccount.setBalance(balance);
+
+                System.out.println(newAccount.toString());
+
+
+                newAccount = accountRepository.save(newAccount);
+                accountRepository.flush();
+
+            }
+
+            return accountRepository.findAll();
+
+        }
+
+    }
+
+    public Float getBalanceForAccount(String accountId, String APIaccessToken) throws IOException {
+        URL url2 = new URL(String.format("https://ob.sandbox.natwest.com/open-banking/v3.1/aisp/accounts/%s/balances", accountId));
+        HttpURLConnection http2 = (HttpURLConnection)url2.openConnection();
+        http2.setRequestProperty("Authorization", String.format("Bearer %s", APIaccessToken));
+
+        System.out.println(http2.getResponseCode() + " " + http2.getResponseMessage());
+
+        //read the response from InputStream
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(http2.getInputStream(), "utf-8"))){
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            System.out.println(response.toString());
+            http2.disconnect();
+
+            String JSONString = response.toString();
+            JSONObject obj = new JSONObject(JSONString);
+            JSONArray balances = obj.getJSONObject("Data").getJSONArray("Balance");
+
+            System.out.println("balances --> " + balances);
+
+            JSONObject accountBalanceInfo = balances.getJSONObject(0);
+            System.out.println("accountBalanceInfo -->" + accountBalanceInfo.toString());
+
+            //returns JSON in the form {"Amount":"000", "Currency": "CHF"}
+            JSONObject amountInfo = accountBalanceInfo.getJSONObject("Amount");
+            System.out.println("amountInfo -->" + amountInfo.toString());
+
+            String amount = amountInfo.getString("Amount");
+            System.out.println("amount-->" + amount);
+
+
+            for (int i=0; i<balances.length(); i++){
+                JSONObject accountBalanceInfo2 = balances.getJSONObject(i);
+                System.out.println("accountBalanceInfo2 -->" + accountBalanceInfo2.toString());
+            }
+
+            return Float.parseFloat(amount);
 
         }
 
