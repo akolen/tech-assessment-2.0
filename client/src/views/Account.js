@@ -3,29 +3,58 @@ import styled from "styled-components";
 
 const Container = styled.div`
   margin: 6px 0;
-  width: 280px;
+  min-width: 450px;
   padding: 10px;
   border-radius: 6px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   border: 1px solid #ffffff26;
 `;
 
-const UserName = styled.div`
-  font-weight: lighter;
-  margin-left: 5px;
-`;
 
-const Name = styled.div`
+const BankName = styled.div`
   font-weight: bold;
   color: #06c4ff;
 `;
 
-const Id = styled.div`
-  margin-left: auto;
-  margin-right: 10px;
-  font-weight: bold;
+const AccountType = styled.div`
+  font-weight: lighter;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  display: inline-block;
 `;
+
+const TypeContainer = styled.div`
+  display: grid;
+  margin: 0em 1em 0em 1em;
+  text-align: center
+`;
+
+const BalanceContainer = styled.div`
+  display:inline;
+  
+`;
+
+const Balance = styled.div`
+  float:left;
+  margin-right: 8px;
+  font-weight: bold;
+  
+`;
+
+const Currency = styled.div`
+  float:left;
+  font-weight: bold;
+  
+`;
+
+
+
+
+
+
 
 /**
  * This is an example of a Functional and stateless component (View) in React. Functional components are not classes and thus don't handle internal state changes.
@@ -35,13 +64,20 @@ const Id = styled.div`
  * https://reactjs.org/docs/components-and-props.html
  * @FunctionalComponent
  */
-const Player = ({ user }) => {
+const Account = ({ account }) => {
   return (
     <Container>
-      <Name>{user.name}</Name> <UserName>{user.username}</UserName>
-      <Id>Id: {user.id}</Id>
+      <BankName>{account.bankName}</BankName>
+      <TypeContainer>
+        <AccountType>{account.accountType}</AccountType>
+        <AccountType>{account.accountSubType}</AccountType>
+      </TypeContainer>
+      <BalanceContainer>
+        <Balance>{account.balance}</Balance>
+        <Currency>{account.currency}</Currency>
+      </BalanceContainer>
     </Container>
   );
 };
 
-export default Player;
+export default Account;
