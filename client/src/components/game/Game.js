@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import Player from '../../views/Account';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
@@ -108,12 +107,11 @@ class Game extends React.Component {
         <TotalSum>
           Gesamtsumme:
           <TotalBalance>
-            {this.state.sum}
+            {Number((Math.ceil(this.state.sum*20 - 0.5)/20)).toFixed(2)}
           </TotalBalance>
           <Currency>
             {this.state.currency}
           </Currency>
-
         </TotalSum>
         <p>Ihre Kontenübersicht:</p>
         {!this.state.accounts ? (

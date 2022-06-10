@@ -73,7 +73,7 @@ const Account = ({ account }) => {
         <AccountType>{account.accountSubType}</AccountType>
       </TypeContainer>
       <BalanceContainer>
-        <Balance>{account.balance}</Balance>
+        <Balance>{Number(Math.ceil(account.balance*20- 0.5)/20).toFixed(2)}</Balance>
         <Currency>{account.currency}</Currency>
       </BalanceContainer>
     </Container>
