@@ -37,12 +37,14 @@ const BalanceContainer = styled.div`
   
 `;
 
+
 const Balance = styled.div`
   float:left;
   margin-right: 8px;
   font-weight: bold;
   
 `;
+
 
 const Currency = styled.div`
   float:left;
@@ -64,20 +66,43 @@ const Currency = styled.div`
  * https://reactjs.org/docs/components-and-props.html
  * @FunctionalComponent
  */
-const Account = ({ account }) => {
-  return (
-    <Container>
-      <BankName>{account.bankName}</BankName>
-      <TypeContainer>
-        <AccountType>{account.accountType}</AccountType>
-        <AccountType>{account.accountSubType}</AccountType>
-      </TypeContainer>
-      <BalanceContainer>
-        <Balance>{Number(Math.ceil(account.balance*20- 0.5)/20).toFixed(2)}</Balance>
-        <Currency>{account.currency}</Currency>
-      </BalanceContainer>
-    </Container>
-  );
-};
+class Account extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state={
+            account: this.props.account,
+            amountColor: null
+        }
+    }
+
+    componentDidMount() {
+        console.log(this.state.account);
+        console.log("this.state.amountColor before", this.state.amountColor);
+        //componentDidMount() gets called for each account once
+        //sets the amountColor to red for every account balance that is negative
+        if(this.state.account.balance < 0 ){
+            this.setState({amountColor:"rgb(227,59,59)"});
+        }
+    }
+
+
+    render() {
+        return (
+            <Container>
+                <BankName>{this.state.account.bankName}</BankName>
+                <TypeContainer>
+                    <AccountType>{this.state.account.accountType}</AccountType>
+                    <AccountType>{this.state.account.accountSubType}</AccountType>
+                </TypeContainer>
+                <BalanceContainer>
+                    <Balance style={{color: this.state.amountColor}}>{Number(Math.ceil(this.state.account.balance*20- 0.5)/20).toFixed(2)}</Balance>
+                    <Currency style={{color: this.state.amountColor}}>{this.state.account.currency}</Currency>
+                </BalanceContainer>
+            </Container>
+        );
+    }
+
+
+}
 
 export default Account;

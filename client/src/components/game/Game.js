@@ -26,13 +26,17 @@ const AccountsContainer = styled.li`
 
 const TotalSum = styled.div`
   font-weight: bold;
+  font-size: 22px;
+  
   
 `;
+
 
 const TotalBalance = styled.div`
   margin: 0px 8px 0px 8px;
   display: inline-block;
 `;
+
 
 const Currency = styled.div`
   display: inline-block;
@@ -92,11 +96,17 @@ class Game extends React.Component {
       })
 
 
-
-
-
     } catch (error) {
       alert(`Something went wrong while fetching the accounts: \n${handleError(error)}`);
+    }
+
+    //change color of total balance to red if it is negative
+    if(this.state.sum < 0 ){
+      const balance = document.getElementById("total-balance");
+      const currency = document.getElementById("currency");
+      console.log(balance);
+      balance.style.color="rgb(227,59,59)";
+      currency.style.color="rgb(227,59,59)";
     }
   }
 
@@ -105,11 +115,11 @@ class Game extends React.Component {
     return (
       <Container>
         <TotalSum>
-          Gesamtsumme:
-          <TotalBalance>
+          Gesamtvermögen:
+          <TotalBalance id={"total-balance"}>
             {Number((Math.ceil(this.state.sum*20 - 0.5)/20)).toFixed(2)}
           </TotalBalance>
-          <Currency>
+          <Currency id={"currency"}>
             {this.state.currency}
           </Currency>
         </TotalSum>
