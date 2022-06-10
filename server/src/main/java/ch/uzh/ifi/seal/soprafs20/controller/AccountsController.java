@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs20.controller;
 
 import ch.uzh.ifi.seal.soprafs20.entity.Account;
+import ch.uzh.ifi.seal.soprafs20.entity.Transaction;
 import ch.uzh.ifi.seal.soprafs20.rest.dto.AccountGetDTO;
 import ch.uzh.ifi.seal.soprafs20.service.AccountService;
 import ch.uzh.ifi.seal.soprafs20.service.UserService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.*;
 import org.json.*;
@@ -40,6 +42,21 @@ public class AccountsController {
         System.out.println(accountsList);
 
         return accountsList;
+    }
+
+    @GetMapping("/accounts/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Transaction> getTransactions(@PathVariable ("accountId")String accountId) throws IOException {
+
+        String accessToken = accountService.getAccessToken();
+        String consentId = accountService.postAccountRequest(accessToken);
+        String authorizationCode = accountService.getConsentApproval(consentId);
+        String APIaccessToken = accountService.exchangeCodeForAccessToken(authorizationCode);
+        List<Transaction> transactions = accountService.getTransactions(accountId, APIaccessToken);
+
+        return transactions;
+
     }
 
 

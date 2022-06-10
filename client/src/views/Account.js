@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import natwestLogo from "../natwestLogo.png"
 
 const Container = styled.div`
   margin: 6px 0;
@@ -15,15 +16,16 @@ const Container = styled.div`
 
 const BankName = styled.div`
   font-weight: bold;
-  color: #06c4ff;
 `;
 
 const AccountType = styled.div`
-  font-weight: lighter;
+  font-weight: bold;
   height: 30px;
   line-height: 30px;
   text-align: center;
   display: inline-block;
+  color: #06c4ff;
+  
 `;
 
 const TypeContainer = styled.div`
@@ -51,6 +53,13 @@ const Currency = styled.div`
   font-weight: bold;
   
 `;
+
+const Image = styled.img`
+    height: 50px;
+    width: 80px;
+
+`;
+
 
 
 
@@ -89,7 +98,7 @@ class Account extends React.Component{
     render() {
         return (
             <Container>
-                <BankName>{this.state.account.bankName}</BankName>
+                <BankName><Image src={natwestLogo}/></BankName>
                 <TypeContainer>
                     <AccountType>{this.state.account.accountType}</AccountType>
                     <AccountType>{this.state.account.accountSubType}</AccountType>

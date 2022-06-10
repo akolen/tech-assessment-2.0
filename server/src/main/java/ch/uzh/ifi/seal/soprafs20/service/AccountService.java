@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs20.service;
 
 import ch.uzh.ifi.seal.soprafs20.entity.Account;
+import ch.uzh.ifi.seal.soprafs20.entity.Transaction;
 import ch.uzh.ifi.seal.soprafs20.repository.AccountRepository;
+import ch.uzh.ifi.seal.soprafs20.repository.TransactionRepository;
 import org.json.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,10 +30,12 @@ public class AccountService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Autowired
-    public AccountService(@Qualifier("accountRepository") AccountRepository accountRepository) {
+    public AccountService(@Qualifier("accountRepository") AccountRepository accountRepository, @Qualifier("transactionRepository")TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     String CLIENT_ID = "9M9CCOu9m6hTBCrZDm1Cpvv-3iL_xKCaPWHtgLPF3cA=";
@@ -64,12 +71,12 @@ public class AccountService {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
+            //System.out.println(response.toString());
             http.disconnect();
             String JSONString = response.toString();
             JSONObject obj = new JSONObject(JSONString);
             String accessToken = obj.getString("access_token");
-            System.out.println(accessToken);
+            //System.out.println(accessToken);
             return accessToken;
         }
 
@@ -99,12 +106,12 @@ public class AccountService {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
+            //System.out.println(response.toString());
             http.disconnect();
             String JSONString = response.toString();
             JSONObject obj = new JSONObject(JSONString);
             String ConsentId = obj.getJSONObject("Data").getString("ConsentId");
-            System.out.println(ConsentId);
+            //System.out.println(ConsentId);
             return ConsentId;
         }
     }
@@ -123,7 +130,7 @@ public class AccountService {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
+            //System.out.println(response.toString());
             http.disconnect();
             String JSONString = response.toString();
             JSONObject obj = new JSONObject(JSONString);
@@ -158,7 +165,7 @@ public class AccountService {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
+            //System.out.println(response.toString());
             http.disconnect();
             String JSONString = response.toString();
             JSONObject obj = new JSONObject(JSONString);
@@ -185,7 +192,7 @@ public class AccountService {
                 response.append(responseLine.trim());
             }
 
-            System.out.println("accounts --> " + response.toString());
+            //System.out.println("accounts --> " + response.toString());
             http.disconnect();
 
             String JSONString = response.toString();
@@ -209,7 +216,7 @@ public class AccountService {
                 Float balance = this.getBalanceForAccount(accountId,APIaccessToken);
                 newAccount.setBalance(balance);
 
-                System.out.println(newAccount.toString());
+                //System.out.println(newAccount.toString());
 
 
                 newAccount = accountRepository.save(newAccount);
@@ -237,35 +244,92 @@ public class AccountService {
             while ((responseLine = br.readLine()) != null) {
                 response.append(responseLine.trim());
             }
-            System.out.println(response.toString());
+            //System.out.println(response.toString());
             http2.disconnect();
 
             String JSONString = response.toString();
             JSONObject obj = new JSONObject(JSONString);
             JSONArray balances = obj.getJSONObject("Data").getJSONArray("Balance");
 
-            System.out.println("balances --> " + balances);
+            //System.out.println("balances --> " + balances);
 
             JSONObject accountBalanceInfo = balances.getJSONObject(0);
-            System.out.println("accountBalanceInfo -->" + accountBalanceInfo.toString());
+            //System.out.println("accountBalanceInfo -->" + accountBalanceInfo.toString());
 
             //returns JSON in the form {"Amount":"000", "Currency": "CHF"}
             JSONObject amountInfo = accountBalanceInfo.getJSONObject("Amount");
-            System.out.println("amountInfo -->" + amountInfo.toString());
+            //System.out.println("amountInfo -->" + amountInfo.toString());
 
             String amount = amountInfo.getString("Amount");
-            System.out.println("amount-->" + amount);
+            //System.out.println("amount-->" + amount);
 
 
             for (int i=0; i<balances.length(); i++){
                 JSONObject accountBalanceInfo2 = balances.getJSONObject(i);
-                System.out.println("accountBalanceInfo2 -->" + accountBalanceInfo2.toString());
+                //System.out.println("accountBalanceInfo2 -->" + accountBalanceInfo2.toString());
             }
 
             return Float.parseFloat(amount);
 
         }
 
+    }
+
+
+    public List<Transaction> getTransactions(String accountId, String APIaccessToken) throws IOException {
+        URL url = new URL(String.format("https://ob.sandbox.natwest.com/open-banking/v3.1/aisp/accounts/%s/transactions", accountId));
+        HttpURLConnection http = (HttpURLConnection)url.openConnection();
+        http.setRequestProperty("Authorization", String.format("Bearer %s", APIaccessToken));
+
+        System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
+
+        //read the response from InputStream
+        try(BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream(), "utf-8"))){
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            //System.out.println(response.toString());
+            http.disconnect();
+
+            String JSONString = response.toString();
+            JSONObject obj = new JSONObject(JSONString);
+            JSONArray transactions = obj.getJSONObject("Data").getJSONArray("Transaction");
+
+            System.out.println("transactions --> " + transactions);
+
+            for(int i=0; i<transactions.length(); i++){
+                JSONObject transaction = transactions.getJSONObject(i);
+                Transaction newtransaction = new Transaction();
+
+
+                newtransaction.setAccountId(transaction.getString("AccountId"));
+                newtransaction.setTransactionId(transaction.getString("TransactionId"));
+                JSONObject amountObject = transaction.getJSONObject("Amount");
+                newtransaction.setAmount(Float.parseFloat(amountObject.getString("Amount")));
+                newtransaction.setCurrency(amountObject.getString("Currency"));
+
+                String date = "2022-05-31T06:54:00.000Z";
+                SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                java.util.Date dtIn = inFormat.parse(transaction.getString("BookingDateTime"));
+
+
+                newtransaction.setBookingDateTime(dtIn);
+
+
+                System.out.println("new transaction  " + newtransaction.toString());
+
+                newtransaction = transactionRepository.save(newtransaction);
+                transactionRepository.flush();
+            }
+
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return transactionRepository.findAllByAccountId(accountId);
     }
 }
 
