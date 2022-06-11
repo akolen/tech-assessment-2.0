@@ -43,6 +43,14 @@ const Currency = styled.div`
 `;
 
 
+const AccountLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+  &:visited {
+    color: inherit;
+    }
+`;
+
 
 
 
@@ -116,12 +124,8 @@ class Game extends React.Component {
       <Container>
         <TotalSum>
           Gesamtvermögen:
-          <TotalBalance id={"total-balance"}>
-            {Number((Math.ceil(this.state.sum*20 - 0.5)/20)).toFixed(2)}
-          </TotalBalance>
-          <Currency id={"currency"}>
-            {this.state.currency}
-          </Currency>
+          <TotalBalance id={"total-balance"}>{Number((Math.ceil(this.state.sum*20 - 0.5)/20)).toFixed(2)}</TotalBalance>
+          <Currency id={"currency"}>{this.state.currency}</Currency>
         </TotalSum>
         <p>Ihre Kontenübersicht:</p>
         {!this.state.accounts ? (
@@ -131,9 +135,11 @@ class Game extends React.Component {
             <AccountsList>
               {this.state.accounts.map(account => {
                 return (
-                  <AccountsContainer key={account.accountId}>
-                    <Account account={account} />
-                  </AccountsContainer>
+                  <AccountLink href={"/transaction/"+account.accountId} key={account.accountId}>
+                    <AccountsContainer>
+                      <Account account={account}/>
+                    </AccountsContainer>
+                  </AccountLink>
                 );
               })}
             </AccountsList>

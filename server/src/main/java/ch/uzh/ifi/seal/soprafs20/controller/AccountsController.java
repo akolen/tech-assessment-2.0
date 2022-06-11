@@ -44,7 +44,7 @@ public class AccountsController {
         return accountsList;
     }
 
-    @GetMapping("/accounts/{accountId}")
+    @GetMapping("/transactions/{accountId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<Transaction> getTransactions(@PathVariable ("accountId")String accountId) throws IOException {

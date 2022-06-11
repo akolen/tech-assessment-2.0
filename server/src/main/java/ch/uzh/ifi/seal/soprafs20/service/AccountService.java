@@ -309,6 +309,8 @@ public class AccountService {
                 JSONObject amountObject = transaction.getJSONObject("Amount");
                 newtransaction.setAmount(Float.parseFloat(amountObject.getString("Amount")));
                 newtransaction.setCurrency(amountObject.getString("Currency"));
+                newtransaction.setCreditDebitIndicator(transaction.getString("CreditDebitIndicator"));
+                newtransaction.setTransactionInformation(transaction.getString("TransactionInformation"));
 
                 String date = "2022-05-31T06:54:00.000Z";
                 SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

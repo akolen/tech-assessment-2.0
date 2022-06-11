@@ -25,6 +25,14 @@ public class Transaction implements Serializable{
     @Column(nullable = false)
     private Date BookingDateTime;
 
+    @Column(nullable = false)
+    private String creditDebitIndicator;
+
+    @Column(nullable = false)
+    private String transactionInformation;
+
+
+
 
     //getters and setters for account variables
     public String getAccountId(){return accountId;}
@@ -42,6 +50,12 @@ public class Transaction implements Serializable{
     public Date getBookingDateTime(){return BookingDateTime;}
     public void setBookingDateTime(Date BookingDateTime){this.BookingDateTime = BookingDateTime;}
 
+    public String getCreditDebitIndicator(){return creditDebitIndicator;}
+    public void setCreditDebitIndicator(String creditDebitIndicator){this.creditDebitIndicator = creditDebitIndicator;}
+
+    public String getTransactionInformation(){return transactionInformation;}
+    public void setTransactionInformation(String transactionInformation){this.transactionInformation = transactionInformation;}
+
 
     @Override
     public String toString() {
@@ -51,6 +65,8 @@ public class Transaction implements Serializable{
                 ", currency=" + '\''+ Currency + '\'' +
                 ", Amount=" + '\''+ Amount + '\'' +
                 ", BookingDateTime=" + '\''+ BookingDateTime + '\'' +
+                ", CreditDebitIndicator=" + '\''+ creditDebitIndicator + '\'' +
+                ", TransactionInfo=" + '\''+ transactionInformation + '\'' +
                 '}';
     }
 

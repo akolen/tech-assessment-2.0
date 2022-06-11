@@ -55,8 +55,11 @@ const Currency = styled.div`
 `;
 
 const Image = styled.img`
-    height: 50px;
-    width: 80px;
+    height: 55px;
+    width: 90px;
+    background-color: white;
+    padding: 0.5em;
+    border-radius: 7px;
 
 `;
 
