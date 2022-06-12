@@ -1,8 +1,8 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { GameGuard } from "../routeProtectors/GameGuard";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import {GameGuard} from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
-import { LoginGuard } from "../routeProtectors/LoginGuard";
+import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import Transaction from "../../transaction/Transactions";
 

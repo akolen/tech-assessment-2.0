@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import {Redirect} from "react-router-dom";
 
 /**
  * routeProtectors interfaces can tell the router whether or not it should allow navigation to a requested route.

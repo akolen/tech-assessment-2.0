@@ -4,7 +4,8 @@ import ch.uzh.ifi.seal.soprafs20.entity.Account;
 import ch.uzh.ifi.seal.soprafs20.entity.Transaction;
 import ch.uzh.ifi.seal.soprafs20.repository.AccountRepository;
 import ch.uzh.ifi.seal.soprafs20.repository.TransactionRepository;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
