@@ -54,6 +54,11 @@ const DateTimeCont = styled.div`
   
 `;
 
+const CreditDebit = styled.div`
+    font-size: 0.9em;
+    color: #069cc9;
+`;
+
 
 
 class TransactionItem extends React.Component{
@@ -80,7 +85,10 @@ class TransactionItem extends React.Component{
                     <DateDiv>{new Date(this.state.transaction.bookingDateTime).toLocaleDateString('de-DE')}</DateDiv>
                     <TimeDiv>{new Date(this.state.transaction.bookingDateTime).toLocaleTimeString('de-DE')}</TimeDiv>
                 </DateTimeCont>
-                <InfoDiv>{this.state.transaction.transactionInformation}</InfoDiv>
+                <div>
+                    <InfoDiv>{this.state.transaction.transactionInformation}</InfoDiv>
+                    <CreditDebit>{this.state.transaction.creditDebitIndicator}</CreditDebit>
+                </div>
                 <AmountContainer>
                     <Amount>{Number(Math.ceil(this.state.transaction.amount*20- 0.5)/20).toFixed(2)}</Amount>
                     <Currency>{this.state.transaction.currency}</Currency>
