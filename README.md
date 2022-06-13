@@ -3,7 +3,7 @@
 ## To get started
 
 ###Client
-#####Install dependencies
+
 * Run `npm install`
   
 #####Development
