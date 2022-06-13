@@ -6,17 +6,18 @@ This project was built using the following templates:
 
 ## To get started
 
-###Client
+### Client
 
 * Run `npm install`
   
-#####Development
+##### Development
 * Run `npm run dev`
-- Runs the app in the development mode. Open http://localhost:3000 to view it in the browser.
+* Runs the app in the development mode. Open http://localhost:3000 to view it in the browser.
   
-###Server
+### Server
 1. File -> Open... -> tech-assessment-2.0
 2. Accept to import the project as a `gradle project`
+
 
 #### Building with Gradle
 You can use the local Gradle Wrapper to build the application.
