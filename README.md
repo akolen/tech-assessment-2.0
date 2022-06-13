@@ -1,5 +1,9 @@
 # 🍎 Oepfelbaum Tech Assessment
 
+This project was built using the following templates:
+- [sopra-fs20-template-server](https://github.com/sealuzh/sopra-fs20-template-server)
+- [sopra-fs20-template-client](https://github.com/sealuzh/sopra-fs20-template-client)
+
 ## To get started
 
 ###Client
@@ -13,6 +17,7 @@
 ###Server
 1. File -> Open... -> tech-assessment-2.0
 2. Accept to import the project as a `gradle project`
+
 #### Building with Gradle
 You can use the local Gradle Wrapper to build the application.
 
